@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinePlus - Solo Películas</title>
+    <meta name="description" content="Tu app dedicada exclusivamente a películas">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="styles/video-player.css">
+    
+    <!-- iOS Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CinePlus">
+</head>
+<body>
+    <!-- Audio Element para la música -->
+    <audio id="loginMusic" loop>
+        <source src="https://audio.jukehost.co.uk/N8E8b5WJhHdIq7q8L1f9Q4e8Q6Q7R8S9T0" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <!-- Controles de música -->
+    <div id="musicControls" class="music-controls">
+        <button id="musicToggle" class="music-btn">🔊</button>
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="60">
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen active">
+        <div class="login-background">
+            <div class="background-overlay"></div>
+            <div class="animated-background"></div>
+        </div>
+        
+        <div class="login-container">
+            <div class="login-header">
+                <h1 class="login-logo">🎬 CinePlus</h1>
+                <div class="language-selector">
+                    <select id="languageSelect">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="login-box">
+                <div class="login-tabs">
+                    <button class="tab-button active" data-tab="signin">Iniciar sesión</button>
+                    <button class="tab-button" data-tab="cinema">Modo Cine</button>
+                </div>
+
+                <!-- Formulario de Inicio de Sesión -->
+                <div id="signin" class="tab-content active">
+                    <h2>Iniciar sesión</h2>
+                    <form class="login-form" id="loginForm">
+                        <div class="form-group">
+                            <label for="email">Correo electrónico o número de teléfono</label>
+                            <input type="text" id="email" name="email" required>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <input type="password" id="password" name="password" required>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+
+                        <button type="submit" class="login-btn">Iniciar sesión</button>
+                        
+                        <div class="login-options">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="rememberMe">
+                                <span class="checkmark"></span>
+                                Recuérdame
+                            </label>
+                            <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                        <div class="social-login">
+                            <div class="divider">
+                                <span>o continúa con</span>
+                            </div>
+                            <button type="button" class="google-login-btn" id="googleLogin">
+                                <span class="google-icon">G</span>
+                                Iniciar sesión con Google
+                            </button>
+                        </div>
+
+                        <div class="signup-link">
+                            <p>¿Primera vez en CinePlus? <a href="#" id="showSignup">Suscríbete ahora</a></p>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Modo Cine -->
+                <div id="cinema" class="tab-content">
+                    <h2>Modo Cine</h2>
+                    <div class="cinema-mode-content">
+                        <div class="cinema-icon">🎦</div>
+                        <p>Disfruta de la experiencia cinematográfica más inmersiva</p>
+                        <ul class="cinema-features">
+                            <li>✅ Calidad 4K Ultra HD</li>
+                            <li>✅ Sonido envolvente Dolby Atmos</li>
+                            <li>✅ Sin interrupciones</li>
+                            <li>✅ Contenido exclusivo</li>
+                            <li>🎵 Música ambiental premium</li>
+                        </ul>
+                        <button class="cinema-btn" id="startCinemaMode">
+                            Activar Modo Cine
+                        </button>
+                        <p class="cinema-note">Requiere suscripción Premium</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login-footer">
+                <div class="music-credit">
+                    🎵 Música: "Ambient Cinematic"
+                </div>
+                <div class="footer-links">
+                    <a href="#">Términos y condiciones de uso</a>
+                    <a href="#">Aviso de privacidad</a>
+                    <a href="#">Ayuda</a>
+                    <a href="#">Cookies</a>
+                </div>
+                <p class="copyright">© 2024 CinePlus. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="main-app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1>🎬 CinePlus</h1>
+                </div>
+                <div class="nav-menu">
+                    <a href="#inicio" class="nav-link active">Inicio</a>
+                    <a href="#peliculas" class="nav-link">Películas</a>
+                    <a href="#categorias" class="nav-link">Categorías</a>
+                    <a href="#apps" class="nav-link">Apps</a>
+                </div>
+                <div class="nav-user">
+                    <span id="userEmail">usuario@ejemplo.com</span>
+                    <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Inicio Section -->
+            <section id="inicio" class="section active">
+                <div class="hero">
+                    <h2>Bienvenido a CinePlus</h2>
+                    <p>Tu aplicación dedicada exclusivamente a películas</p>
+                </div>
+                
+                <div class="featured-movies">
+                    <h3>Películas Destacadas</h3>
+                    <div id="featuredMovies" class="movies-grid">
+                        <!-- Películas cargadas dinámicamente -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Películas Section -->
+            <section id="peliculas" class="section">
+                <div class="section-header">
+                    <h2>Todas las Películas</h2>
+                    <div class="filters">
+                        <select id="genreFilter">
+                            <option value="">Todos los géneros</option>
+                            <option value="28">Acción</option>
+                            <option value="35">Comedia</option>
+                            <option value="18">Drama</option>
+                            <option value="27">Terror</option>
+                            <option value="878">Ciencia Ficción</option>
+                        </select>
+                        <select id="yearFilter">
+                            <option value="">Todos los años</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="allMovies" class="movies-grid">
+                    <!-- Películas cargadas dinámicamente -->
+                </div>
+                <div class="load-more">
+                    <button id="loadMoreBtn">Cargar más películas</button>
+                </div>
+            </section>
+
+            <!-- Categorías Section -->
+            <section id="categorias" class="section">
+                <h2>Categorías de Películas</h2>
+                <div class="categories-grid">
+                    <div class="category-card" data-genre="28">
+                        <h3>🎭 Acción</h3>
+                    </div>
+                    <div class="category-card" data-genre="35">
+                        <h3>😂 Comedia</h3>
+                    </div>
+                    <div class="category-card" data-genre="18">
+                        <h3>🎭 Drama</h3>
+                    </div>
+                    <div class="category-card" data-genre="27">
+                        <h3>👻 Terror</h3>
+                    </div>
+                    <div class="category-card" data-genre="878">
+                        <h3>🚀 Ciencia Ficción</h3>
+                    </div>
+                    <div class="category-card" data-genre="14">
+                        <h3>🏰 Fantasía</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Apps Section -->
+            <section id="apps" class="section">
+                <h2>Apps de Películas Recomendadas</h2>
+                <div class="apps-grid">
+                    <div class="app-card">
+                        <div class="app-icon">🎬</div>
+                        <h3>Prime Video</h3>
+                        <p>Streaming de películas y series</p>
+                        <a href="https://www.primevideo.com" target="_blank" class="app-link">Visitar</a>
+                    </div>
+                    
+                    <div class="app-card">
+                        <div class="app-icon">📺</div>
+                        <h3>Netflix</h3>
+                        <p>Plataforma de streaming con amplio catálogo</p>
+                        <a href="https://www.netflix.com" target="_blank" class="app-link">Visitar</a>
+                    </div>
+                    
+                    <div class="app-card">
+                        <div class="app-icon">🎥</div>
+                        <h3>HBO Max</h3>
+                        <p>Películas exclusivas y contenido premium</p>
+                        <a href="https://www.hbomax.com" target="_blank" class="app-link">Visitar</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Video Player -->
+    <div id="videoPlayer" class="video-player hidden">
+        <div class="player-container">
+            <div class="video-container">
+                <video id="mainVideo" class="video-element">
+                    Tu navegador no soporta el elemento de video.
+                </video>
+                
+                <!-- Loading Spinner -->
+                <div class="loading-spinner hidden">
+                    <div class="spinner"></div>
+                </div>
+
+                <!-- Controles del reproductor -->
+                <div class="player-controls">
+                    <!-- Barra de progreso superior -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress-filled"></div>
+                            <div class="progress-thumb"></div>
+                        </div>
+                    </div>
+
+                    <!-- Controles inferiores -->
+                    <div class="controls-bottom">
+                        <div class="controls-left">
+                            <button class="control-btn play-pause-btn">
+                                <span class="play-icon">▶</span>
+                                <span class="pause-icon">❚❚</span>
+                            </button>
+                            
+                            <div class="time-display">
+                                <span class="current-time">0:00</span>
+                                <span class="time-separator"> / </span>
+                                <span class="duration">0:00</span>
+                            </div>
+
+                            <button class="control-btn volume-btn">
+                                <span class="volume-icon">🔊</span>
+                                <span class="mute-icon">🔇</span>
+                            </button>
+
+                            <div class="volume-slider-container">
+                                <input type="range" class="volume-slider" min="0" max="100" value="100">
+                            </div>
+                        </div>
+
+                        <div class="controls-right">
+                            <button class="control-btn playback-speed-btn">
+                                <span class="speed-text">1x</span>
+                            </button>
+
+                            <button class="control-btn subtitles-btn">
+                                <span class="subtitle-icon">🎯</span>
+                            </button>
+
+                            <button class="control-btn quality-btn">
+                                <span class="quality-text">HD</span>
+                            </button>
+
+                            <button class="control-btn fullscreen-btn">
+                                <span class="fullscreen-icon">⛶</span>
+                                <span class="exit-fullscreen-icon">⛷</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overlay de reproducción/pausa -->
+                <div class="play-pause-overlay hidden">
+                    <button class="big-play-btn">▶</button>
+                    <button class="big-pause-btn">❚❚</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/movie-api.js"></script>
+    <script src="js/app-detection.js"></script>
+    <script src="js/watch-progress.js"></script>
+    <script src="js/language-manager.js"></script>
+    <script src="js/music-player.js"></script>
+    <script src="js/video-player.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
