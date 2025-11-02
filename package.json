@@ -1,0 +1,13 @@
+{
+  "name": "cineplus-app",
+  "version": "1.0.0",
+  "description": "Aplicación de películas estilo Prime Video",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000 || python -m http.server 3000 || http-server",
+    "start": "npm run dev"
+  },
+  "keywords": ["movies", "streaming", "pwa"],
+  "author": "CinePlus",
+  "license": "MIT"
+}
